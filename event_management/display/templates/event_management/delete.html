@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete {{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Delete Event</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <h5>Are you sure you want to delete this event?</h5>
+                        <p class="mb-0">This action cannot be undone.</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6>Event Details:</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Title:</strong> {{ event.title }}</li>
+                            <li><strong>Date:</strong> {{ event.start_datetime|date:"M d, Y g:i A" }}</li>
+                            <li><strong>Location:</strong> {{ event.location|default:"TBD" }}</li>
+                            <li><strong>Attendees:</strong> {{ event.attendee_count }}</li>
+                        </ul>
+                    </div>
+
+                    {% if event.attendees.exists %}
+                        <div class="alert alert-warning">
+                            <strong>Warning:</strong> This event has {{ event.attendee_count }} registered attendee{{ event.attendee_count|pluralize }}.
+                            Deleting this event will remove their registrations.
+                        </div>
+                    {% endif %}
+
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger me-2">
+                            <i class="fas fa-trash"></i> Yes, Delete Event
+                        </button>
+                    </form>
+                    <a href="{% url 'event_management:detail' event.pk %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-3 text-center">
+                <a href="{% url 'event_management:list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Events
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
