@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class CalendarConfig(AppConfig):
+class SharedConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'calendar'
-    verbose_name = 'Calendar'
+    name = 'shared'
+    verbose_name = 'Shared Models'

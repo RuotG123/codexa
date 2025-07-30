@@ -11,5 +11,5 @@ urlpatterns = [
     path('events/', include('event_management.urls')),
     path('members/', include('member_management.urls')),
     path('speakers/', include('speaker_management.urls')),
-    path('calendar/', include('calendar.urls')),
+    path('calendar/', include('event_calendar.urls')),
 ]

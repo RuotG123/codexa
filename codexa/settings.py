@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'event_management',
     'member_management',
     'speaker_management',
-    'calendar',
+    'event_calendar',
 ]
 
 MIDDLEWARE = [
@@ -48,7 +48,13 @@ ROOT_URLCONF = 'codexa.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [
+            BASE_DIR / 'templates',
+            BASE_DIR / 'event_management' / 'display' / 'templates',
+            BASE_DIR / 'member_management' / 'display' / 'templates',
+            BASE_DIR / 'speaker_management' / 'display' / 'templates',
+            BASE_DIR / 'event_calendar' / 'display' / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

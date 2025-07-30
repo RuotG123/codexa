@@ -7,8 +7,11 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Events</h1>
-        {% if user.is_authenticated %}
-            <a href="{% url 'event_management:create' %}" class="btn btn-primary">Create Event</a>
+        {% if user.is_authenticated and user.is_staff %}
+            <div class="btn-group">
+                <a href="{% url 'event_management:create' %}" class="btn btn-primary">Create Event</a>
+                <a href="{% url 'admin:shared_event_changelist' %}" class="btn btn-outline-primary">Manage in Admin</a>
+            </div>
         {% endif %}
     </div>
 
@@ -75,7 +78,7 @@
         <div class="alert alert-info" role="alert">
             <h4 class="alert-heading">No events found</h4>
             <p>There are currently no events scheduled.</p>
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and user.is_staff %}
                 <hr>
                 <p class="mb-0">
                     <a href="{% url 'event_management:create' %}" class="btn btn-primary">Create the first event</a>

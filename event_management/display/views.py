@@ -27,16 +27,10 @@ class EventDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated:
-            try:
-                member = Member.objects.get(user=self.request.user)
-                can_register, message = can_register_for_event(self.object, member)
-                context['can_register'] = can_register
-                context['register_message'] = message
-                context['is_registered'] = member in self.object.attendees.all()
-            except Member.DoesNotExist:
-                context['can_register'] = False
-                context['register_message'] = "Member profile required"
+        # For admin-only system, no registration logic needed
+        context['can_register'] = False
+        context['is_registered'] = False
+        context['register_message'] = "Contact admin to register for events"
         return context
 
 
@@ -71,21 +65,3 @@ class EventDeleteView(LoginRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(request, 'Event deleted successfully!')
         return super().delete(request, *args, **kwargs)
-
-
-@login_required
-def register_for_event(request, pk):
-    event = get_object_or_404(Event, pk=pk)
-    try:
-        member = Member.objects.get(user=request.user)
-        can_register, message = can_register_for_event(event, member)
-
-        if can_register:
-            event.attendees.add(member)
-            messages.success(request, f'Successfully registered for {event.title}!')
-        else:
-            messages.error(request, message)
-    except Member.DoesNotExist:
-        messages.error(request, 'Member profile required to register for events.')
-
-    return redirect('event_management:detail', pk=pk)

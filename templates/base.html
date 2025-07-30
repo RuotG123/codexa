@@ -29,7 +29,7 @@
                         <a class="nav-link" href="{% url 'speaker_management:list' %}">Speakers</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'calendar:view' %}">Calendar</a>
+                        <a class="nav-link" href="{% url 'event_calendar:view' %}">Calendar</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -46,7 +46,7 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'admin:login' %}">Login</a>
+                            <a class="nav-link" href="{% url 'admin:login' %}">Admin Login</a>
                         </li>
                     {% endif %}
                 </ul>
