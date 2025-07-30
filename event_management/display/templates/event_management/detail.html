@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-0">{{ event.title }}</h1>
+                    <span class="badge bg-{{ event.event_type|default:'secondary' }} fs-6">
+                        {{ event.get_event_type_display }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-calendar"></i> Date & Time</h6>
+                            <p>{{ event.start_datetime|date:"l, F d, Y" }}</p>
+                            <p>{{ event.start_datetime|date:"g:i A" }} - {{ event.end_datetime|date:"g:i A" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-map-marker-alt"></i> Location</h6>
+                            <p>{{ event.location|default:"Location TBD" }}</p>
+                        </div>
+                    </div>
+
+                    {% if event.speaker %}
+                        <div class="mb-3">
+                            <h6><i class="fas fa-user"></i> Speaker</h6>
+                            <p><strong>{{ event.speaker.name }}</strong></p>
+                            {% if event.speaker.bio %}
+                                <p class="text-muted">{{ event.speaker.bio|truncatewords:30 }}</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <h6><i class="fas fa-info-circle"></i> Description</h6>
+                        <p>{{ event.description|linebreaks }}</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-users"></i> Attendees</h6>
+                            <p>{{ event.attendee_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-flag"></i> Status</h6>
+                            <span class="badge bg-{% if event.status == 'published' %}success{% elif event.status == 'draft' %}warning{% else %}secondary{% endif %}">
+                                {{ event.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Actions</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.is_authenticated %}
+                        {% if can_register %}
+                            <a href="{% url 'event_management:register' event.pk %}" class="btn btn-success btn-block mb-2">
+                                Register for Event
+                            </a>
+                        {% elif is_registered %}
+                            <button class="btn btn-outline-success btn-block mb-2" disabled>
+                                Already Registered
+                            </button>
+                        {% else %}
+                            <button class="btn btn-secondary btn-block mb-2" disabled>
+                                {{ register_message }}
+                            </button>
+                        {% endif %}
+
+                        {% if user == event.created_by or user.is_staff %}
+                            <a href="{% url 'event_management:update' event.pk %}" class="btn btn-outline-primary btn-block mb-2">
+                                Edit Event
+                            </a>
+                            <a href="{% url 'event_management:delete' event.pk %}" class="btn btn-outline-danger btn-block">
+                                Delete Event
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted">Please log in to register for events.</p>
+                        <a href="{% url 'admin:login' %}" class="btn btn-primary btn-block">Log In</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if event.attendees.exists %}
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6>Attendees ({{ event.attendee_count }})</h6>
+                    </div>
+                    <div class="card-body">
+                        {% for attendee in event.attendees.all|slice:":10" %}
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="flex-grow-1">
+                                    <small>{{ attendee.name }}</small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% if event.attendee_count > 10 %}
+                            <small class="text-muted">... and {{ event.attendee_count|add:"-10" }} more</small>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'event_management:list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Events
+        </a>
+    </div>
+</div>
+{% endblock %}

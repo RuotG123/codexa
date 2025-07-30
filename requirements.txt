@@ -1,7 +1,23 @@
-asgiref==3.8.1                      # Required by Django for async support
-crispy-bootstrap5==2024.10         # Bootstrap 5 support for crispy forms
-Django==5.1.1                       # Django 5.1.1 core framework
-django-crispy-forms==2.3           # Crispy forms for better form rendering
-pillow==11.1.0                      # Image handling (used in forms or models)
-sqlparse==0.4.4                     # SQL parsing (used by Django admin)
-tzdata==2023.4                      # Time zone data for Windows support
+# Core Django + dependencies
+Django==5.1.1
+asgiref==3.8.1
+sqlparse==0.4.4
+tzdata==2023.4
+pillow==11.1.0
+
+# Forms and styling
+django-crispy-forms==2.3
+crispy-bootstrap5==2024.10
+
+# .env configuration
+python-dotenv>=1.0
+
+# Static files in production
+whitenoise>=6.5
+
+# WSGI server (optional for local/prod deployment)
+gunicorn>=20.1
+
+# Testing (optional)
+pytest>=7.3
+pytest-django>=4.5

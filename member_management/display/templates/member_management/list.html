@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Members{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Members</h1>
+        {% if user.is_authenticated %}
+            <a href="{% url 'member_management:create' %}" class="btn btn-primary">Add Member</a>
+        {% endif %}
+    </div>
+
+    {% if members %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Membership Type</th>
+                                        <th>Join Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for member in members %}
+                                        <tr>
+                                            <td>
+                                                <a href="{% url 'member_management:detail' member.pk %}">
+                                                    {{ member.name }}
+                                                </a>
+                                            </td>
+                                            <td>{{ member.email }}</td>
+                                            <td>{{ member.phone|default:"—" }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ member.membership_type|default:'secondary' }}">
+                                                    {{ member.get_membership_type_display }}
+                                                </span>
+                                            </td>
+                                            <td>{{ member.join_date|date:"M d, Y" }}</td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="{% url 'member_management:detail' member.pk %}"
+                                                       class="btn btn-outline-info btn-sm">
+                                                        View
+                                                    </a>
+                                                    {% if user.is_authenticated %}
+                                                        <a href="{% url 'member_management:update' member.pk %}"
+                                                           class="btn btn-outline-primary btn-sm">
+                                                            Edit
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if is_paginated %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">No members found</h4>
+            <p>There are currently no members registered.</p>
+            {% if user.is_authenticated %}
+                <hr>
+                <p class="mb-0">
+                    <a href="{% url 'member_management:create' %}" class="btn btn-primary">Add the first member</a>
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
