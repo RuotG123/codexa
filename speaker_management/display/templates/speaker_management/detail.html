@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ speaker.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-0">{{ speaker.name }}</h1>
+                    <span class="badge bg-primary fs-6">Speaker</span>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-envelope"></i> Email</h6>
+                            <p><a href="mailto:{{ speaker.email }}">{{ speaker.email }}</a></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-phone"></i> Phone</h6>
+                            <p>{{ speaker.phone|default:"Not provided" }}</p>
+                        </div>
+                    </div>
+
+                    {% if speaker.expertise %}
+                        <div class="mb-3">
+                            <h6><i class="fas fa-lightbulb"></i> Areas of Expertise</h6>
+                            <p>{{ speaker.expertise }}</p>
+                        </div>
+                    {% endif %}
+
+                    {% if speaker.bio %}
+                        <div class="mb-3">
+                            <h6><i class="fas fa-info-circle"></i> Biography</h6>
+                            <p>{{ speaker.bio|linebreaks }}</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-calendar-plus"></i> Added</h6>
+                            <p>{{ speaker.created_at|date:"F d, Y g:i A" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-calendar-alt"></i> Last Updated</h6>
+                            <p>{{ speaker.updated_at|date:"F d, Y g:i A" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if recent_events %}
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-calendar"></i> Recent Events</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            {% for event in recent_events %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <a href="{% url 'event_management:detail' event.pk %}">{{ event.title }}</a>
+                                        </h6>
+                                        <p class="mb-1 text-muted">{{ event.start_datetime|date:"M d, Y g:i A" }}</p>
+                                        <small class="text-muted">{{ event.location|default:"Location TBD" }}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-{{ event.event_type|default:'secondary' }}">
+                                            {{ event.get_event_type_display }}
+                                        </span>
+                                        <br>
+                                        <small class="text-muted">{{ event.attendee_count }} attendees</small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card mt-4">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5>No Events Yet</h5>
+                        <p class="text-muted">This speaker hasn't been assigned to any events.</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Actions</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'speaker_management:update' speaker.pk %}" class="btn btn-outline-primary btn-block mb-2 w-100">
+                            <i class="fas fa-edit"></i> Edit Speaker
+                        </a>
+                        <a href="{% url 'speaker_management:delete' speaker.pk %}" class="btn btn-outline-danger btn-block w-100">
+                            <i class="fas fa-trash"></i> Delete Speaker
+                        </a>
+                    {% else %}
+                        <p class="text-muted">Please log in to manage speakers.</p>
+                        <a href="{% url 'admin:login' %}" class="btn btn-primary btn-block w-100">Log In</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6>Speaker Statistics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h4>{{ speaker.event_set.count }}</h4>
+                            <small class="text-muted">Total Events</small>
+                        </div>
+                        <div class="col-6">
+                            <h4>{{ speaker.created_at|timesince }}</h4>
+                            <small class="text-muted">Speaker Since</small>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row text-center">
+                        <div class="col-12">
+                            <h4>{{ speaker.event_set.filter.status='published'|length }}</h4>
+                            <small class="text-muted">Published Events</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if speaker.expertise %}
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6>Expertise Tags</h6>
+                    </div>
+                    <div class="card-body">
+                        {% for skill in speaker.expertise|split:"," %}
+                            <span class="badge bg-light text-dark me-1 mb-1">{{ skill|strip }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'speaker_management:list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Speakers
+        </a>
+    </div>
+</div>
+{% endblock %}

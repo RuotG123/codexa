@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Speakers{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Speakers</h1>
+        {% if user.is_authenticated %}
+            <a href="{% url 'speaker_management:create' %}" class="btn btn-primary">Add Speaker</a>
+        {% endif %}
+    </div>
+
+    {% if speakers %}
+        <div class="row">
+            {% for speaker in speakers %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ speaker.name }}</h5>
+                            <p class="card-text">{{ speaker.bio|truncatewords:20|default:"No biography available." }}</p>
+                            <p class="text-muted">
+                                <i class="fas fa-envelope"></i> {{ speaker.email }}
+                            </p>
+                            {% if speaker.phone %}
+                                <p class="text-muted">
+                                    <i class="fas fa-phone"></i> {{ speaker.phone }}
+                                </p>
+                            {% endif %}
+                            {% if speaker.expertise %}
+                                <p class="text-muted">
+                                    <i class="fas fa-lightbulb"></i> {{ speaker.expertise|truncatewords:8 }}
+                                </p>
+                            {% endif %}
+                            <div class="mt-auto">
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar-plus"></i> Added {{ speaker.created_at|date:"M d, Y" }}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'speaker_management:detail' speaker.pk %}" class="btn btn-outline-primary btn-sm">
+                                    View Details
+                                </a>
+                                {% if user.is_authenticated %}
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'speaker_management:update' speaker.pk %}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">No speakers found</h4>
+            <p>There are currently no speakers registered in the system.</p>
+            {% if user.is_authenticated %}
+                <hr>
+                <p class="mb-0">
+                    <a href="{% url 'speaker_management:create' %}" class="btn btn-primary">Add the first speaker</a>
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
