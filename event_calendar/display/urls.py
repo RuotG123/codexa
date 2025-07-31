@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import CalendarView, EventAPIView
+from .display import views
+
+app_name = 'event_calendar'
 
 urlpatterns = [
-    path('', CalendarView.as_view(), name='calendar'),
-    path('api/events/', EventAPIView.as_view(), name='api_events'),
+    path('', views.CalendarView.as_view(), name='view'),
+    path('api/events/', views.EventAPIView.as_view(), name='api_events'),
 ]

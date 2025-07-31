@@ -124,25 +124,16 @@
                             <small class="text-muted">Speaker Since</small>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row text-center">
-                        <div class="col-12">
-                            <h4>{{ speaker.event_set.filter.status='published'|length }}</h4>
-                            <small class="text-muted">Published Events</small>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             {% if speaker.expertise %}
                 <div class="card mt-3">
                     <div class="card-header">
-                        <h6>Expertise Tags</h6>
+                        <h6>Expertise</h6>
                     </div>
                     <div class="card-body">
-                        {% for skill in speaker.expertise|split:"," %}
-                            <span class="badge bg-light text-dark me-1 mb-1">{{ skill|strip }}</span>
-                        {% endfor %}
+                        <p class="text-muted">{{ speaker.expertise }}</p>
                     </div>
                 </div>
             {% endif %}

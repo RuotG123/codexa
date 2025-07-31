@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
-        events: '{% url "calendar:api_events" %}',
+        events: '{% url "event_calendar:api_events" %}',
         eventClick: function(info) {
             if (info.event.url) {
                 window.open(info.event.url, '_self');
