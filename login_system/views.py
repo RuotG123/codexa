@@ -7,7 +7,7 @@ from django.views import View
 class LoginView(View):
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('main_menu')
+            return redirect('login_system:main_menu')
         return render(request, 'login_system/login.html')
 
     def post(self, request):
@@ -16,7 +16,7 @@ class LoginView(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('main_menu')
+            return redirect('login_system:main_menu')
         return render(request, 'login_system/login.html', {'error': 'Invalid credentials'})
 
 
@@ -27,4 +27,4 @@ def main_menu_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('login_system:login')
