@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Main Menu{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5">UNOCEO Booking & Attendance System</h1>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="row g-4">
+                <!-- Member Management -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                            <h4>Member Management</h4>
+                            <p class="text-muted">Manage organization members, view member details, and update member information.</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'member_management:list' %}" class="btn btn-primary mb-2 w-100">View Members</a>
+                                <a href="{% url 'member_management:create' %}" class="btn btn-outline-primary w-100">Add Member</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Management -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow">
+                        <div class="card-body text-center">
+                            <i class="fas fa-calendar-alt fa-3x text-success mb-3"></i>
+                            <h4>Event Management</h4>
+                            <p class="text-muted">Create, organize and manage events. View event details and track attendance.</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'event_management:list' %}" class="btn btn-success mb-2 w-100">View Events</a>
+                                <a href="{% url 'event_management:create' %}" class="btn btn-outline-success w-100">Create Event</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Speaker Management -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow">
+                        <div class="card-body text-center">
+                            <i class="fas fa-microphone-alt fa-3x text-warning mb-3"></i>
+                            <h4>Speaker Management</h4>
+                            <p class="text-muted">Manage speakers, their expertise areas, and assign them to events.</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'speaker_management:list' %}" class="btn btn-warning mb-2 w-100">View Speakers</a>
+                                <a href="{% url 'speaker_management:create' %}" class="btn btn-outline-warning w-100">Add Speaker</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Management -->
+                <div class="col-md-6">
+                    <div class="card h-100 shadow">
+                        <div class="card-body text-center">
+                            <i class="fas fa-calendar-check fa-3x text-info mb-3"></i>
+                            <h4>Calendar Management</h4>
+                            <p class="text-muted">View events in calendar format and manage event scheduling.</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'event_calendar:view' %}" class="btn btn-info w-100">View Calendar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Welcome, {{ user.get_full_name|default:user.username }}!</h5>
+                    <p class="text-muted">Use the menu above to navigate to different sections of the system.</p>
+                    <a href="{% url 'admin:index' %}" class="btn btn-outline-secondary me-2">Admin Panel</a>
+                    <a href="{% url 'login_system:logout' %}" class="btn btn-outline-danger">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

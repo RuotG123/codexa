@@ -8,5 +8,5 @@ urlpatterns = [
     path('<int:pk>/', views.SpeakerDetailView.as_view(), name='detail'),
     path('create/', views.SpeakerCreateView.as_view(), name='create'),
     path('<int:pk>/update/', views.SpeakerUpdateView.as_view(), name='update'),
-    # Delete URL removed - not in structure chart
+    path('<int:pk>/delete/', views.SpeakerDeleteView.as_view(), name='delete'),
 ]

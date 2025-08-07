@@ -41,10 +41,6 @@ class EventCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('event_management:list')
 
     def form_valid(self, form):
-        messages.success(self.request, 'Event updated successfully!')
-        return super().form_valid(form)
-
-# DeleteView removed - not in structure chartvalid(self, form):
         form.instance.created_by = self.request.user
         messages.success(self.request, 'Event created successfully!')
         return super().form_valid(form)
@@ -56,4 +52,6 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'event_management/update.html'
     success_url = reverse_lazy('event_management:list')
 
-    def form_
+    def form_valid(self, form):
+        messages.success(self.request, 'Event updated successfully!')
+        return super().form_valid(form)
