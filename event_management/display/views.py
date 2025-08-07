@@ -10,7 +10,8 @@ from ..forms.create import EventCreateForm
 from ..forms.update import EventUpdateForm
 
 
-class EventListView(LoginRequiredMixin, ListView):
+class EventListView(ListView):
+    """Public view - no login required"""
     model = Event
     template_name = 'event_management/list.html'
     context_object_name = 'events'
@@ -20,14 +21,15 @@ class EventListView(LoginRequiredMixin, ListView):
         return Event.objects.filter(status='published').order_by('-start_datetime')
 
 
-class EventDetailView(LoginRequiredMixin, DetailView):
+class EventDetailView(DetailView):
+    """Public view - no login required"""
     model = Event
     template_name = 'event_management/detail.html'
     context_object_name = 'event'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # For admin-only system, no registration logic needed
+        # For public viewing, show registration message
         context['can_register'] = False
         context['is_registered'] = False
         context['register_message'] = "Contact admin to register for events"
@@ -35,6 +37,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
 
 
 class EventCreateView(LoginRequiredMixin, CreateView):
+    """Admin only - login required"""
     model = Event
     form_class = EventCreateForm
     template_name = 'event_management/create.html'
@@ -47,6 +50,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 
 class EventUpdateView(LoginRequiredMixin, UpdateView):
+    """Admin only - login required"""
     model = Event
     form_class = EventUpdateForm
     template_name = 'event_management/update.html'

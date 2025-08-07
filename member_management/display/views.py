@@ -8,7 +8,8 @@ from ..forms.create import MemberCreateForm
 from ..forms.update import MemberUpdateForm
 
 
-class MemberListView(LoginRequiredMixin, ListView):
+class MemberListView(ListView):
+    """Public view - no login required"""
     model = Member
     template_name = 'member_management/list.html'
     context_object_name = 'members'
@@ -18,7 +19,8 @@ class MemberListView(LoginRequiredMixin, ListView):
         return Member.objects.filter(is_active=True).order_by('name')
 
 
-class MemberDetailView(LoginRequiredMixin, DetailView):
+class MemberDetailView(DetailView):
+    """Public view - no login required"""
     model = Member
     template_name = 'member_management/detail.html'
     context_object_name = 'member'
@@ -30,6 +32,7 @@ class MemberDetailView(LoginRequiredMixin, DetailView):
 
 
 class MemberCreateView(LoginRequiredMixin, CreateView):
+    """Admin only - login required"""
     model = Member
     form_class = MemberCreateForm
     template_name = 'member_management/create.html'
@@ -41,6 +44,7 @@ class MemberCreateView(LoginRequiredMixin, CreateView):
 
 
 class MemberUpdateView(LoginRequiredMixin, UpdateView):
+    """Admin only - login required"""
     model = Member
     form_class = MemberUpdateForm
     template_name = 'member_management/update.html'
@@ -52,6 +56,7 @@ class MemberUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class MemberDeleteView(LoginRequiredMixin, DeleteView):
+    """Admin only - login required"""
     model = Member
     template_name = 'member_management/delete.html'
     success_url = reverse_lazy('member_management:list')
