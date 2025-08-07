@@ -8,7 +8,8 @@ from ..forms.create import SpeakerCreateForm
 from ..forms.update import SpeakerUpdateForm
 
 
-class SpeakerListView(LoginRequiredMixin, ListView):
+class SpeakerListView(ListView):
+    """Public view - no login required"""
     model = Speaker
     template_name = 'speaker_management/list.html'
     context_object_name = 'speakers'
@@ -18,7 +19,8 @@ class SpeakerListView(LoginRequiredMixin, ListView):
         return Speaker.objects.all().order_by('name')
 
 
-class SpeakerDetailView(LoginRequiredMixin, DetailView):
+class SpeakerDetailView(DetailView):
+    """Public view - no login required"""
     model = Speaker
     template_name = 'speaker_management/detail.html'
     context_object_name = 'speaker'
@@ -30,6 +32,7 @@ class SpeakerDetailView(LoginRequiredMixin, DetailView):
 
 
 class SpeakerCreateView(LoginRequiredMixin, CreateView):
+    """Admin only - login required"""
     model = Speaker
     form_class = SpeakerCreateForm
     template_name = 'speaker_management/create.html'
@@ -41,6 +44,7 @@ class SpeakerCreateView(LoginRequiredMixin, CreateView):
 
 
 class SpeakerUpdateView(LoginRequiredMixin, UpdateView):
+    """Admin only - login required"""
     model = Speaker
     form_class = SpeakerUpdateForm
     template_name = 'speaker_management/update.html'
@@ -52,6 +56,7 @@ class SpeakerUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class SpeakerDeleteView(LoginRequiredMixin, DeleteView):
+    """Admin only - login required"""
     model = Speaker
     template_name = 'speaker_management/delete.html'
     success_url = reverse_lazy('speaker_management:list')

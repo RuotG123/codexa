@@ -9,6 +9,7 @@ from shared.utils import get_events_by_date_range
 
 
 class CalendarView(TemplateView):
+    """Public view - no login required"""
     template_name = 'calendar/calendar.html'
 
     def get_context_data(self, **kwargs):
@@ -21,6 +22,7 @@ class CalendarView(TemplateView):
 
 
 class EventAPIView(View):
+    """Public API - no login required"""
     def get(self, request):
         """Return events in JSON format for calendar display"""
         start_date = request.GET.get('start')
