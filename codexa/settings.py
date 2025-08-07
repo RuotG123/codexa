@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'crispy_bootstrap5',
+    'login_system',
     'shared',
     'event_management',
     'member_management',
@@ -50,6 +51,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
+            BASE_DIR / 'login_system' / 'templates',
             BASE_DIR / 'event_management' / 'display' / 'templates',
             BASE_DIR / 'member_management' / 'display' / 'templates',
             BASE_DIR / 'speaker_management' / 'display' / 'templates',
@@ -111,3 +113,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Crispy Forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# Login URLs
+LOGIN_URL = 'login_system:login'
+LOGIN_REDIRECT_URL = 'login_system:main_menu'
+LOGOUT_REDIRECT_URL = 'login_system:login'

@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from shared.models import Event, Member
 from shared.utils import can_register_for_event
@@ -10,7 +10,7 @@ from ..forms.create import EventCreateForm
 from ..forms.update import EventUpdateForm
 
 
-class EventListView(ListView):
+class EventListView(LoginRequiredMixin, ListView):
     model = Event
     template_name = 'event_management/list.html'
     context_object_name = 'events'
@@ -20,7 +20,7 @@ class EventListView(ListView):
         return Event.objects.filter(status='published').order_by('-start_datetime')
 
 
-class EventDetailView(DetailView):
+class EventDetailView(LoginRequiredMixin, DetailView):
     model = Event
     template_name = 'event_management/detail.html'
     context_object_name = 'event'
@@ -41,6 +41,10 @@ class EventCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('event_management:list')
 
     def form_valid(self, form):
+        messages.success(self.request, 'Event updated successfully!')
+        return super().form_valid(form)
+
+# DeleteView removed - not in structure chartvalid(self, form):
         form.instance.created_by = self.request.user
         messages.success(self.request, 'Event created successfully!')
         return super().form_valid(form)
@@ -52,16 +56,4 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'event_management/update.html'
     success_url = reverse_lazy('event_management:list')
 
-    def form_valid(self, form):
-        messages.success(self.request, 'Event updated successfully!')
-        return super().form_valid(form)
-
-
-class EventDeleteView(LoginRequiredMixin, DeleteView):
-    model = Event
-    template_name = 'event_management/delete.html'
-    success_url = reverse_lazy('event_management:list')
-
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, 'Event deleted successfully!')
-        return super().delete(request, *args, **kwargs)
+    def form_

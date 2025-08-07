@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from shared.models import Member
 from ..forms.create import MemberCreateForm
 from ..forms.update import MemberUpdateForm
 
 
-class MemberListView(ListView):
+class MemberListView(LoginRequiredMixin, ListView):
     model = Member
     template_name = 'member_management/list.html'
     context_object_name = 'members'
@@ -18,7 +18,7 @@ class MemberListView(ListView):
         return Member.objects.filter(is_active=True).order_by('name')
 
 
-class MemberDetailView(DetailView):
+class MemberDetailView(LoginRequiredMixin, DetailView):
     model = Member
     template_name = 'member_management/detail.html'
     context_object_name = 'member'
@@ -50,12 +50,3 @@ class MemberUpdateView(LoginRequiredMixin, UpdateView):
         messages.success(self.request, 'Member updated successfully!')
         return super().form_valid(form)
 
-
-class MemberDeleteView(LoginRequiredMixin, DeleteView):
-    model = Member
-    template_name = 'member_management/delete.html'
-    success_url = reverse_lazy('member_management:list')
-
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, 'Member deleted successfully!')
-        return super().delete(request, *args, **kwargs)

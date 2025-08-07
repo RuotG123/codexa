@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from shared.models import Speaker
 from ..forms.create import SpeakerCreateForm
 from ..forms.update import SpeakerUpdateForm
 
 
-class SpeakerListView(ListView):
+class SpeakerListView(LoginRequiredMixin, ListView):
     model = Speaker
     template_name = 'speaker_management/list.html'
     context_object_name = 'speakers'
@@ -18,7 +18,7 @@ class SpeakerListView(ListView):
         return Speaker.objects.all().order_by('name')
 
 
-class SpeakerDetailView(DetailView):
+class SpeakerDetailView(LoginRequiredMixin, DetailView):
     model = Speaker
     template_name = 'speaker_management/detail.html'
     context_object_name = 'speaker'
@@ -50,12 +50,4 @@ class SpeakerUpdateView(LoginRequiredMixin, UpdateView):
         messages.success(self.request, 'Speaker updated successfully!')
         return super().form_valid(form)
 
-
-class SpeakerDeleteView(LoginRequiredMixin, DeleteView):
-    model = Speaker
-    template_name = 'speaker_management/delete.html'
-    success_url = reverse_lazy('speaker_management:list')
-
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, 'Speaker deleted successfully!')
-        return super().delete(request, *args, **kwargs)
+# DeleteView removed - not in structure chart
