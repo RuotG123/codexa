@@ -1,3 +1,4 @@
+# event_management/forms/update.py
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Div, Field
@@ -21,6 +22,7 @@ class EventUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Div(
                 Field('title', css_class='form-control'),
@@ -48,3 +50,14 @@ class EventUpdateForm(forms.ModelForm):
             ),
             Submit('submit', 'Update Event', css_class='btn btn-primary')
         )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_datetime = cleaned_data.get('start_datetime')
+        end_datetime = cleaned_data.get('end_datetime')
+
+        if start_datetime and end_datetime:
+            if start_datetime >= end_datetime:
+                raise forms.ValidationError("End time must be after start time.")
+
+        return cleaned_data
