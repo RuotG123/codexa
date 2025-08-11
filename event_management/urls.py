@@ -8,5 +8,5 @@ urlpatterns = [
     path('<int:pk>/', views.EventDetailView.as_view(), name='detail'),
     path('create/', views.EventCreateView.as_view(), name='create'),
     path('<int:pk>/update/', views.EventUpdateView.as_view(), name='update'),
-    # Delete URL removed - not in structure chart
+    path('<int:pk>/delete/', views.EventDeleteView.as_view(), name='delete'),
 ]
