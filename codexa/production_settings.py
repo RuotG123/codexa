@@ -12,6 +12,9 @@ ALLOWED_HOSTS = ['ruotg123.pythonanywhere.com', 'localhost', '127.0.0.1']
 STATIC_URL = '/static/'
 STATIC_ROOT = '/home/ruotg123/codexa/static'
 
+# Remove STATICFILES_DIRS to avoid conflict with STATIC_ROOT
+STATICFILES_DIRS = []
+
 # Media files (if you add file uploads later)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/home/ruotg123/codexa/media'
@@ -30,12 +33,12 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
 # Generate a new secret key for production
-SECRET_KEY = 'django-production-key-change-this-to-something-very-random-and-secure'
+SECRET_KEY = 'django-production-ruotg123-change-this-to-something-very-random-and-secure'
 
-# Additional security settings (optional but recommended)
-SECURE_SSL_REDIRECT = False  # Set to True if you have SSL
-SESSION_COOKIE_SECURE = False  # Set to True if you have SSL
-CSRF_COOKIE_SECURE = False  # Set to True if you have SSL
+# Additional security settings
+SECURE_SSL_REDIRECT = False  # PythonAnywhere handles SSL
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 # Logging configuration (optional)
 LOGGING = {
