@@ -1,3 +1,4 @@
+# event_management/urls.py
 from django.urls import path
 from .display import views
 
@@ -8,5 +9,6 @@ urlpatterns = [
     path('<int:pk>/', views.EventDetailView.as_view(), name='detail'),
     path('create/', views.EventCreateView.as_view(), name='create'),
     path('<int:pk>/update/', views.EventUpdateView.as_view(), name='update'),
-    path('<int:pk>/delete/', views.EventDeleteView.as_view(), name='delete'),
+    # Remove delete URL pattern
+    # path('<int:pk>/delete/', views.EventDeleteView.as_view(), name='delete'),
 ]

@@ -87,12 +87,17 @@
                 </div>
                 <div class="card-body">
                     {% if user.is_authenticated %}
-                        <a href="{% url 'member_management:update' member.pk %}" class="btn btn-outline-primary btn-block mb-2">
-                            Edit Member
+                        <a href="{% url 'member_management:update' member.pk %}" class="btn btn-outline-primary btn-block mb-2 w-100">
+                            <i class="fas fa-edit"></i> Edit Member
                         </a>
-                        <a href="{% url 'member_management:delete' member.pk %}" class="btn btn-outline-danger btn-block">
-                            Delete Member
+                        <!-- Delete button removed - only available in admin -->
+                        <a href="{% url 'admin:shared_member_change' member.pk %}" class="btn btn-outline-secondary btn-block mb-2 w-100">
+                            <i class="fas fa-cog"></i> Manage in Admin
                         </a>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i>
+                            To delete this member, use the Django admin panel above.
+                        </small>
                     {% endif %}
                 </div>
             </div>

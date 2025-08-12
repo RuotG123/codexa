@@ -99,9 +99,14 @@
                         <a href="{% url 'speaker_management:update' speaker.pk %}" class="btn btn-outline-primary btn-block mb-2 w-100">
                             <i class="fas fa-edit"></i> Edit Speaker
                         </a>
-                        <a href="{% url 'speaker_management:delete' speaker.pk %}" class="btn btn-outline-danger btn-block w-100">
-                            <i class="fas fa-trash"></i> Delete Speaker
+                        <!-- Delete button removed - only available in admin -->
+                        <a href="{% url 'admin:shared_speaker_change' speaker.pk %}" class="btn btn-outline-secondary btn-block mb-2 w-100">
+                            <i class="fas fa-cog"></i> Manage in Admin
                         </a>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i>
+                            To delete this speaker, use the Django admin panel above.
+                        </small>
                     {% else %}
                         <p class="text-muted">Please log in to manage speakers.</p>
                         <a href="{% url 'admin:login' %}" class="btn btn-primary btn-block w-100">Log In</a>

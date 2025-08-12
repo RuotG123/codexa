@@ -1,3 +1,4 @@
+# member_management/urls.py
 from django.urls import path
 from .display import views
 
@@ -8,5 +9,6 @@ urlpatterns = [
     path('<int:pk>/', views.MemberDetailView.as_view(), name='detail'),
     path('create/', views.MemberCreateView.as_view(), name='create'),
     path('<int:pk>/update/', views.MemberUpdateView.as_view(), name='update'),
-    path('<int:pk>/delete/', views.MemberDeleteView.as_view(), name='delete'),
+    # Remove delete URL pattern
+    # path('<int:pk>/delete/', views.MemberDeleteView.as_view(), name='delete'),
 ]

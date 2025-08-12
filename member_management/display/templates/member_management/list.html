@@ -39,9 +39,13 @@
                                             <td>{{ member.email }}</td>
                                             <td>{{ member.phone|default:"—" }}</td>
                                             <td>
-                                                <span class="badge bg-{{ member.membership_type|default:'secondary' }}">
-                                                    {{ member.get_membership_type_display }}
-                                                </span>
+                                                {% if member.membership_type %}
+                                                    <span class="badge bg-{% if member.membership_type == 'premium' %}warning{% elif member.membership_type == 'student' %}info{% elif member.membership_type == 'corporate' %}success{% else %}secondary{% endif %}">
+                                                        {{ member.get_membership_type_display }}
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Regular</span>
+                                                {% endif %}
                                             </td>
                                             <td>{{ member.join_date|date:"M d, Y" }}</td>
                                             <td>

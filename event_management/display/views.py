@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from shared.models import Event, Speaker
 from ..forms.create import EventCreateForm
@@ -69,14 +69,6 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('event_management:detail', kwargs={'pk': self.object.pk})
 
 
-class EventDeleteView(LoginRequiredMixin, DeleteView):
-    """Delete an existing event."""
-    model = Event
-    template_name = 'event_management/delete.html'
-    context_object_name = 'event'
-    success_url = reverse_lazy('event_management:list')
+# EventDeleteView removed - delete functionality only available in Django admin
 
-    def delete(self, request, *args, **kwargs):
-        """Add success message when event is deleted."""
-        messages.success(self.request, 'Event deleted successfully!')
-        return super().delete(request, *args, **kwargs)
+# EventDeleteView removed - delete functionality only available in Django admin
