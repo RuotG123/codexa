@@ -9,15 +9,15 @@ pillow==11.1.0
 django-crispy-forms==2.3
 crispy-bootstrap5==2024.10
 
-# .env configuration
-python-dotenv>=1.0
-
-# Static files in production
-whitenoise>=6.5
-
-# WSGI server (optional for local/prod deployment)
+# Production server
 gunicorn>=20.1
 
-# Testing (optional)
+# Environment configuration
+python-dotenv>=1.0
+
+# Static files handling
+whitenoise>=6.5
+
+# Testing (optional - for development)
 pytest>=7.3
 pytest-django>=4.5
