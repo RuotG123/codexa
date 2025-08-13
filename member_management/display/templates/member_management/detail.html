@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ member.name }}{% endblock %}
+{% block title %}{{ speaker.name }}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
@@ -8,48 +8,38 @@
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h1 class="h3 mb-0">{{ member.name }}</h1>
-                    <span class="badge bg-{{ member.membership_type|default:'secondary' }} fs-6">
-                        {{ member.get_membership_type_display }}
-                    </span>
+                    <h1 class="h3 mb-0">{{ speaker.name }}</h1>
+                    <span class="badge bg-primary fs-6">Speaker</span>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <h6><i class="fas fa-envelope"></i> Email</h6>
-                            <p><a href="mailto:{{ member.email }}">{{ member.email }}</a></p>
+                            <p><a href="mailto:{{ speaker.email }}">{{ speaker.email }}</a></p>
                         </div>
                         <div class="col-md-6">
                             <h6><i class="fas fa-phone"></i> Phone</h6>
-                            <p>{{ member.phone|default:"Not provided" }}</p>
+                            <p>{{ speaker.phone|default:"Not provided" }}</p>
                         </div>
                     </div>
+
+                    {% if speaker.bio %}
+                        <div class="mb-3">
+                            <h6><i class="fas fa-info-circle"></i> Biography</h6>
+                            <p>{{ speaker.bio|linebreaks }}</p>
+                        </div>
+                    {% endif %}
 
                     <div class="row">
                         <div class="col-md-6">
-                            <h6><i class="fas fa-calendar-plus"></i> Join Date</h6>
-                            <p>{{ member.join_date|date:"F d, Y" }}</p>
+                            <h6><i class="fas fa-calendar-plus"></i> Added</h6>
+                            <p>{{ speaker.created_at|date:"F d, Y g:i A" }}</p>
                         </div>
                         <div class="col-md-6">
-                            <h6><i class="fas fa-check-circle"></i> Status</h6>
-                            <p>
-                                {% if member.is_active %}
-                                    <span class="badge bg-success">Active</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">Inactive</span>
-                                {% endif %}
-                            </p>
+                            <h6><i class="fas fa-calendar-alt"></i> Last Updated</h6>
+                            <p>{{ speaker.updated_at|date:"F d, Y g:i A" }}</p>
                         </div>
                     </div>
-
-                    {% if member.user %}
-                        <div class="row">
-                            <div class="col-12">
-                                <h6><i class="fas fa-user"></i> Linked Account</h6>
-                                <p>{{ member.user.username }}</p>
-                            </div>
-                        </div>
-                    {% endif %}
                 </div>
             </div>
 
@@ -69,12 +59,24 @@
                                         <p class="mb-1 text-muted">{{ event.start_datetime|date:"M d, Y g:i A" }}</p>
                                         <small class="text-muted">{{ event.location|default:"Location TBD" }}</small>
                                     </div>
-                                    <span class="badge bg-{{ event.event_type|default:'secondary' }}">
-                                        {{ event.get_event_type_display }}
-                                    </span>
+                                    <div class="text-end">
+                                        <span class="badge bg-{{ event.event_type|default:'secondary' }}">
+                                            {{ event.get_event_type_display }}
+                                        </span>
+                                        <br>
+                                        <small class="text-muted">{{ event.attendee_count }} attendees</small>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card mt-4">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5>No Events Yet</h5>
+                        <p class="text-muted">This speaker hasn't been assigned to any events.</p>
                     </div>
                 </div>
             {% endif %}
@@ -87,44 +89,29 @@
                 </div>
                 <div class="card-body">
                     {% if user.is_authenticated %}
-                        <a href="{% url 'member_management:update' member.pk %}" class="btn btn-outline-primary btn-block mb-2 w-100">
-                            <i class="fas fa-edit"></i> Edit Member
+                        <a href="{% url 'speaker_management:update' speaker.pk %}" class="btn btn-outline-primary btn-block mb-2 w-100">
+                            <i class="fas fa-edit"></i> Edit Speaker
                         </a>
                         <!-- Delete button removed - only available in admin -->
-                        <a href="{% url 'admin:shared_member_change' member.pk %}" class="btn btn-outline-secondary btn-block mb-2 w-100">
+                        <a href="{% url 'admin:shared_speaker_change' speaker.pk %}" class="btn btn-outline-secondary btn-block mb-2 w-100">
                             <i class="fas fa-cog"></i> Manage in Admin
                         </a>
                         <small class="text-muted">
                             <i class="fas fa-info-circle"></i>
-                            To delete this member, use the Django admin panel above.
+                            To delete this speaker, use the Django admin panel above.
                         </small>
+                    {% else %}
+                        <p class="text-muted">Please log in to manage speakers.</p>
+                        <a href="{% url 'admin:login' %}" class="btn btn-primary btn-block w-100">Log In</a>
                     {% endif %}
-                </div>
-            </div>
-
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h6>Member Statistics</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-6">
-                            <h4>{{ member.events_attending.count }}</h4>
-                            <small class="text-muted">Events Attended</small>
-                        </div>
-                        <div class="col-6">
-                            <h4>{{ member.join_date|timesince }}</h4>
-                            <small class="text-muted">Member Since</small>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="mt-3">
-        <a href="{% url 'member_management:list' %}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left"></i> Back to Members
+        <a href="{% url 'speaker_management:list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Speakers
         </a>
     </div>
 </div>
