@@ -23,17 +23,15 @@ class Speaker(models.Model):
 class Member(models.Model):
     """Model for managing organization members"""
     MEMBERSHIP_TYPES = [
-        ('regular', 'Regular'),
-        ('premium', 'Premium'),
         ('student', 'Student'),
-        ('corporate', 'Corporate'),
+        ('admin', 'Admin/Staff'),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
     email = models.EmailField(validators=[EmailValidator()])
     phone = models.CharField(max_length=20, blank=True)
-    membership_type = models.CharField(max_length=20, choices=MEMBERSHIP_TYPES, default='regular')
+    membership_type = models.CharField(max_length=20, choices=MEMBERSHIP_TYPES, default='student')
     join_date = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

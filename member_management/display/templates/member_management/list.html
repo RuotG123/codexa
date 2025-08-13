@@ -40,11 +40,11 @@
                                             <td>{{ member.phone|default:"—" }}</td>
                                             <td>
                                                 {% if member.membership_type %}
-                                                    <span class="badge bg-{% if member.membership_type == 'premium' %}warning{% elif member.membership_type == 'student' %}info{% elif member.membership_type == 'corporate' %}success{% else %}secondary{% endif %}">
+                                                    <span class="badge bg-{% if member.membership_type == 'admin' %}success{% elif member.membership_type == 'student' %}info{% else %}secondary{% endif %}">
                                                         {{ member.get_membership_type_display }}
                                                     </span>
                                                 {% else %}
-                                                    <span class="badge bg-secondary">Regular</span>
+                                                    <span class="badge bg-info">Student</span>
                                                 {% endif %}
                                             </td>
                                             <td>{{ member.join_date|date:"M d, Y" }}</td>
