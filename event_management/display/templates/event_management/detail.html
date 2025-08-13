@@ -43,10 +43,6 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <h6><i class="fas fa-users"></i> Attendees</h6>
-                            <p>{{ event.attendee_count }}{% if event.max_attendees %} / {{ event.max_attendees }}{% endif %}</p>
-                        </div>
-                        <div class="col-md-6">
                             <h6><i class="fas fa-flag"></i> Status</h6>
                             <span class="badge bg-{% if event.status == 'published' %}success{% elif event.status == 'draft' %}warning{% else %}secondary{% endif %}">
                                 {{ event.get_status_display }}
@@ -87,26 +83,6 @@
                     {% endif %}
                 </div>
             </div>
-
-            {% if event.attendees.exists %}
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <h6>Attendees ({{ event.attendee_count }})</h6>
-                    </div>
-                    <div class="card-body">
-                        {% for attendee in event.attendees.all|slice:":10" %}
-                            <div class="d-flex align-items-center mb-2">
-                                <div class="flex-grow-1">
-                                    <small>{{ attendee.name }}</small>
-                                </div>
-                            </div>
-                        {% endfor %}
-                        {% if event.attendee_count > 10 %}
-                            <small class="text-muted">... and {{ event.attendee_count|add:"-10" }} more</small>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
         </div>
     </div>
 
