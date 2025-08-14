@@ -22,11 +22,6 @@
                             <p class="text-muted">
                                 <i class="fas fa-envelope"></i> {{ speaker.email }}
                             </p>
-                            {% if speaker.phone %}
-                                <p class="text-muted">
-                                    <i class="fas fa-phone"></i> {{ speaker.phone }}
-                                </p>
-                            {% endif %}
                             {% if speaker.expertise %}
                                 <p class="text-muted">
                                     <i class="fas fa-lightbulb"></i> {{ speaker.expertise|truncatewords:8 }}

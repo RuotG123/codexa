@@ -7,7 +7,7 @@ from shared.models import Speaker
 class SpeakerCreateForm(forms.ModelForm):
     class Meta:
         model = Speaker
-        fields = ['name', 'email', 'phone', 'bio', 'expertise']
+        fields = ['name', 'email', 'bio', 'expertise']  # Removed 'phone'
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 4}),
             'expertise': forms.Textarea(attrs={'rows': 2}),
@@ -20,10 +20,6 @@ class SpeakerCreateForm(forms.ModelForm):
             Div(
                 Field('name', css_class='form-control'),
                 Field('email', css_class='form-control'),
-                css_class='row mb-3'
-            ),
-            Div(
-                Field('phone', css_class='form-control'),
                 css_class='row mb-3'
             ),
             Div(

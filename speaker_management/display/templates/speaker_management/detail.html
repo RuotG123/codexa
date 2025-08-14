@@ -13,15 +13,18 @@
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <h6><i class="fas fa-envelope"></i> Email</h6>
                             <p><a href="mailto:{{ speaker.email }}">{{ speaker.email }}</a></p>
                         </div>
-                        <div class="col-md-6">
-                            <h6><i class="fas fa-phone"></i> Phone</h6>
-                            <p>{{ speaker.phone|default:"Not provided" }}</p>
-                        </div>
                     </div>
+
+                    {% if speaker.expertise %}
+                        <div class="mb-3">
+                            <h6><i class="fas fa-lightbulb"></i> Areas of Expertise</h6>
+                            <p>{{ speaker.expertise }}</p>
+                        </div>
+                    {% endif %}
 
                     {% if speaker.bio %}
                         <div class="mb-3">

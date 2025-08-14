@@ -23,7 +23,9 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
-                                        <th>Membership Type</th>
+                                        <th>Type</th>
+                                        <th>Major</th>
+                                        <th>Year</th>
                                         <th>Join Date</th>
                                         <th>Actions</th>
                                     </tr>
@@ -45,6 +47,16 @@
                                                     </span>
                                                 {% else %}
                                                     <span class="badge bg-info">Student</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ member.major|default:"—" }}</td>
+                                            <td>
+                                                {% if member.year %}
+                                                    <span class="badge bg-secondary">
+                                                        {{ member.get_year_display }}
+                                                    </span>
+                                                {% else %}
+                                                    —
                                                 {% endif %}
                                             </td>
                                             <td>{{ member.join_date|date:"M d, Y" }}</td>

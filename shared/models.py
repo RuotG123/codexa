@@ -9,7 +9,7 @@ class Speaker(models.Model):
     email = models.EmailField(validators=[EmailValidator()])
     bio = models.TextField(blank=True)
     expertise = models.CharField(max_length=300, blank=True)
-    phone = models.CharField(max_length=20, blank=True)
+    # Removed phone field
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -27,11 +27,26 @@ class Member(models.Model):
         ('admin', 'Admin/Staff'),
     ]
 
+    # Added year choices for students
+    YEAR_CHOICES = [
+        ('freshman', 'Freshman'),
+        ('sophomore', 'Sophomore'),
+        ('junior', 'Junior'),
+        ('senior', 'Senior'),
+        ('graduate', 'Graduate'),
+        ('alumni', 'Alumni'),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
     email = models.EmailField(validators=[EmailValidator()])
     phone = models.CharField(max_length=20, blank=True)
     membership_type = models.CharField(max_length=20, choices=MEMBERSHIP_TYPES, default='student')
+
+    # New fields for academic information
+    major = models.CharField(max_length=100, blank=True, help_text="Student's major/field of study")
+    year = models.CharField(max_length=20, choices=YEAR_CHOICES, blank=True, help_text="Academic year level")
+
     join_date = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

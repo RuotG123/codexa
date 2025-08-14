@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 class MemberCreateForm(forms.ModelForm):
     class Meta:
         model = Member
-        fields = ['name', 'email', 'phone', 'membership_type', 'user']
+        fields = ['name', 'email', 'phone', 'membership_type', 'major', 'year', 'user']
         widgets = {
             'user': forms.Select(attrs={'class': 'form-control'}),
         }
@@ -17,6 +17,12 @@ class MemberCreateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['user'].queryset = User.objects.filter(member__isnull=True)
         self.fields['user'].required = False
+
+        # Add helpful labels and help text
+        self.fields['major'].label = 'Major/Field of Study'
+        self.fields['year'].label = 'Academic Year'
+        self.fields['major'].help_text = 'Enter the student\'s major or field of study'
+        self.fields['year'].help_text = 'Select the current academic year level'
 
         self.helper = FormHelper()
         self.helper.layout = Layout(
@@ -28,6 +34,11 @@ class MemberCreateForm(forms.ModelForm):
             Div(
                 Div(Field('phone', css_class='form-control'), css_class='col-md-6'),
                 Div(Field('membership_type', css_class='form-control'), css_class='col-md-6'),
+                css_class='row mb-3'
+            ),
+            Div(
+                Div(Field('major', css_class='form-control'), css_class='col-md-6'),
+                Div(Field('year', css_class='form-control'), css_class='col-md-6'),
                 css_class='row mb-3'
             ),
             Div(
