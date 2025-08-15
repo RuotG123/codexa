@@ -7,7 +7,7 @@ from shared.models import Member
 class MemberUpdateForm(forms.ModelForm):
     class Meta:
         model = Member
-        fields = ['name', 'email', 'phone', 'membership_type', 'major', 'year', 'is_active']
+        fields = ['name', 'email', 'membership_role', 'major', 'year', 'is_active']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -15,6 +15,7 @@ class MemberUpdateForm(forms.ModelForm):
         # Add helpful labels and help text
         self.fields['major'].label = 'Major/Field of Study'
         self.fields['year'].label = 'Academic Year'
+        self.fields['membership_role'].label = 'Membership Role'
         self.fields['major'].help_text = 'Enter the student\'s major or field of study'
         self.fields['year'].help_text = 'Select the current academic year level'
 
@@ -26,8 +27,7 @@ class MemberUpdateForm(forms.ModelForm):
                 css_class='row mb-3'
             ),
             Div(
-                Div(Field('phone', css_class='form-control'), css_class='col-md-6'),
-                Div(Field('membership_type', css_class='form-control'), css_class='col-md-6'),
+                Field('membership_role', css_class='form-control'),
                 css_class='row mb-3'
             ),
             Div(

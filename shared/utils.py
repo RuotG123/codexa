@@ -7,8 +7,7 @@ def get_upcoming_events():
     """Get events that are scheduled for the future"""
     from shared.models import Event
     return Event.objects.filter(
-        start_datetime__gte=timezone.now(),
-        status='published'
+        start_datetime__gte=timezone.now()
     ).order_by('start_datetime')
 
 
@@ -38,14 +37,8 @@ def format_event_datetime(event):
 
 def can_register_for_event(event, member):
     """Check if a member can register for an event"""
-    if event.status != 'published':
-        return False, "Event is not available for registration"
-
     if not event.is_upcoming:
         return False, "Event has already passed"
-
-    if event.max_attendees and event.attendee_count >= event.max_attendees:
-        return False, "Event is full"
 
     if member in event.attendees.all():
         return False, "Already registered for this event"

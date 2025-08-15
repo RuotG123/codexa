@@ -7,14 +7,16 @@ from shared.models import Speaker
 class SpeakerUpdateForm(forms.ModelForm):
     class Meta:
         model = Speaker
-        fields = ['name', 'email', 'bio', 'expertise']  # Removed 'phone'
+        fields = ['name', 'email', 'company_name', 'bio']
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 4}),
-            'expertise': forms.Textarea(attrs={'rows': 2}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['company_name'].label = 'Company/Organization'
+        self.fields['company_name'].help_text = 'Speaker\'s company or organization'
+
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(
@@ -23,7 +25,7 @@ class SpeakerUpdateForm(forms.ModelForm):
                 css_class='row mb-3'
             ),
             Div(
-                Field('expertise', css_class='form-control'),
+                Field('company_name', css_class='form-control'),
                 css_class='row mb-3'
             ),
             Div(
