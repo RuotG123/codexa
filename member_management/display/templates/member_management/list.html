@@ -22,11 +22,10 @@
                                     <tr>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Type</th>
+                                        <th>Role</th>
                                         <th>Major</th>
                                         <th>Year</th>
-                                        <th>Join Date</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -39,11 +38,10 @@
                                                 </a>
                                             </td>
                                             <td>{{ member.email }}</td>
-                                            <td>{{ member.phone|default:"—" }}</td>
                                             <td>
-                                                {% if member.membership_type %}
-                                                    <span class="badge bg-{% if member.membership_type == 'admin' %}success{% elif member.membership_type == 'student' %}info{% else %}secondary{% endif %}">
-                                                        {{ member.get_membership_type_display }}
+                                                {% if member.membership_role %}
+                                                    <span class="badge bg-{% if member.membership_role == 'admin' %}success{% elif member.membership_role == 'student' %}info{% else %}secondary{% endif %}">
+                                                        {{ member.get_membership_role_display }}
                                                     </span>
                                                 {% else %}
                                                     <span class="badge bg-info">Student</span>
@@ -59,7 +57,13 @@
                                                     —
                                                 {% endif %}
                                             </td>
-                                            <td>{{ member.join_date|date:"M d, Y" }}</td>
+                                            <td>
+                                                {% if member.is_active %}
+                                                    <span class="badge bg-success">Active</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Inactive</span>
+                                                {% endif %}
+                                            </td>
                                             <td>
                                                 <div class="btn-group btn-group-sm">
                                                     <a href="{% url 'member_management:detail' member.pk %}"

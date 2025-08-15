@@ -1,3 +1,4 @@
+<!-- Updated event_management/display/templates/event_management/detail.html -->
 {% extends 'base.html' %}
 
 {% block title %}{{ event.title }}{% endblock %}
@@ -9,32 +10,27 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h1 class="h3 mb-0">{{ event.title }}</h1>
-                    <span class="badge bg-{{ event.event_type|default:'secondary' }} fs-6">
-                        {{ event.get_event_type_display }}
-                    </span>
+                    <span class="badge bg-primary fs-6">Event</span>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <h6><i class="fas fa-calendar"></i> Date & Time</h6>
                             <p>{{ event.start_datetime|date:"l, F d, Y" }}</p>
                             <p>{{ event.start_datetime|date:"g:i A" }} - {{ event.end_datetime|date:"g:i A" }}</p>
                         </div>
-                        <div class="col-md-6">
-                            <h6><i class="fas fa-map-marker-alt"></i> Location</h6>
-                            <p>{{ event.location|default:"Location TBD" }}</p>
-                        </div>
                     </div>
 
-                    {% if event.speaker %}
-                        <div class="mb-3">
-                            <h6><i class="fas fa-user"></i> Speaker</h6>
-                            <p><strong>{{ event.speaker.name }}</strong></p>
-                            {% if event.speaker.bio %}
-                                <p class="text-muted">{{ event.speaker.bio|truncatewords:30 }}</p>
-                            {% endif %}
-                        </div>
-                    {% endif %}
+                    <div class="mb-3">
+                        <h6><i class="fas fa-user"></i> Speaker</h6>
+                        <p><strong>{{ event.speaker.name }}</strong></p>
+                        {% if event.speaker.company_name %}
+                            <p class="text-muted">{{ event.speaker.company_name }}</p>
+                        {% endif %}
+                        {% if event.speaker.bio %}
+                            <p class="text-muted">{{ event.speaker.bio|truncatewords:30 }}</p>
+                        {% endif %}
+                    </div>
 
                     <div class="mb-3">
                         <h6><i class="fas fa-info-circle"></i> Description</h6>
@@ -43,10 +39,8 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <h6><i class="fas fa-flag"></i> Status</h6>
-                            <span class="badge bg-{% if event.status == 'published' %}success{% elif event.status == 'draft' %}warning{% else %}secondary{% endif %}">
-                                {{ event.get_status_display }}
-                            </span>
+                            <h6><i class="fas fa-users"></i> Attendees</h6>
+                            <p>{{ event.attendee_count }} registered</p>
                         </div>
                     </div>
                 </div>
@@ -63,8 +57,6 @@
                         <a href="{% url 'event_management:update' event.pk %}" class="btn btn-outline-primary btn-block mb-2 w-100">
                             <i class="fas fa-edit"></i> Edit Event
                         </a>
-                        <!-- Delete button removed - only available in admin -->
-                        <hr>
                         <a href="{% url 'admin:shared_event_change' event.pk %}" class="btn btn-outline-secondary btn-block mb-2 w-100">
                             <i class="fas fa-cog"></i> Manage in Admin
                         </a>
@@ -93,3 +85,75 @@
     </div>
 </div>
 {% endblock %}
+
+<!-- Updated member_management/display/templates/member_management/detail.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{ member.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-0">{{ member.name }}</h1>
+                    <span class="badge bg-{% if member.membership_role == 'admin' %}success{% elif member.membership_role == 'student' %}info{% else %}info{% endif %} fs-6">
+                        {{ member.get_membership_role_display }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h6><i class="fas fa-envelope"></i> Email</h6>
+                            <p><a href="mailto:{{ member.email }}">{{ member.email }}</a></p>
+                        </div>
+                    </div>
+
+                    <!-- Academic Information Section -->
+                    {% if member.major or member.year %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-graduation-cap"></i> Major</h6>
+                                <p>{{ member.major|default:"Not specified" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-calendar-alt"></i> Academic Year</h6>
+                                <p>
+                                    {% if member.year %}
+                                        <span class="badge bg-secondary">{{ member.get_year_display }}</span>
+                                    {% else %}
+                                        Not specified
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-check-circle"></i> Status</h6>
+                            <p>
+                                {% if member.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    {% if member.user %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h6><i class="fas fa-user"></i> Linked Account</h6>
+                                <p>{{ member.user.username }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %>

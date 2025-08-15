@@ -1,87 +1,116 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 
-{% block title %}Events{% endblock %}
+{% block title %}{{ speaker.name }}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Events</h1>
-        {% if user.is_authenticated and user.is_staff %}
-            <div class="btn-group">
-                <a href="{% url 'event_management:create' %}" class="btn btn-primary">Create Event</a>
-                <a href="{% url 'admin:shared_event_changelist' %}" class="btn btn-outline-primary">Manage in Admin</a>
-            </div>
-        {% endif %}
-    </div>
-
-    {% if events %}
-        <div class="row">
-            {% for event in events %}
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ event.title }}</h5>
-                            <p class="card-text">{{ event.description|truncatewords:20 }}</p>
-                            <p class="text-muted">
-                                <i class="fas fa-calendar"></i> {{ event.start_datetime|date:"M d, Y H:i" }}
-                            </p>
-                            <p class="text-muted">
-                                <i class="fas fa-map-marker-alt"></i> {{ event.location|default:"TBD" }}
-                            </p>
-                            {% if event.speaker %}
-                                <p class="text-muted">
-                                    <i class="fas fa-user"></i> {{ event.speaker.name }}
-                                </p>
-                            {% endif %}
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="badge bg-{{ event.event_type|default:'secondary' }}">
-                                    {{ event.get_event_type_display }}
-                                </span>
-                            </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-0">{{ speaker.name }}</h1>
+                    <span class="badge bg-primary fs-6">Speaker</span>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <h6><i class="fas fa-envelope"></i> Email</h6>
+                            <p><a href="mailto:{{ speaker.email }}">{{ speaker.email }}</a></p>
                         </div>
-                        <div class="card-footer">
-                            <a href="{% url 'event_management:detail' event.pk %}" class="btn btn-outline-primary btn-sm">
-                                View Details
-                            </a>
+                    </div>
+
+                    {% if speaker.company_name %}
+                        <div class="mb-3">
+                            <h6><i class="fas fa-building"></i> Company/Organization</h6>
+                            <p>{{ speaker.company_name }}</p>
+                        </div>
+                    {% endif %}
+
+                    {% if speaker.bio %}
+                        <div class="mb-3">
+                            <h6><i class="fas fa-info-circle"></i> Biography</h6>
+                            <p>{{ speaker.bio|linebreaks }}</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-calendar-plus"></i> Added</h6>
+                            <p>{{ speaker.created_at|date:"F d, Y g:i A" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-calendar-alt"></i> Last Updated</h6>
+                            <p>{{ speaker.updated_at|date:"F d, Y g:i A" }}</p>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
+            </div>
 
-        {% if is_paginated %}
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    {% if page_obj.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                        </li>
-                    {% endif %}
-
-                    <li class="page-item active">
-                        <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                    </li>
-
-                    {% if page_obj.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        {% endif %}
-    {% else %}
-        <div class="alert alert-info" role="alert">
-            <h4 class="alert-heading">No events found</h4>
-            <p>There are currently no events scheduled.</p>
-            {% if user.is_authenticated and user.is_staff %}
-                <hr>
-                <p class="mb-0">
-                    <a href="{% url 'event_management:create' %}" class="btn btn-primary">Create the first event</a>
-                </p>
+            {% if recent_events %}
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-calendar"></i> Recent Events</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            {% for event in recent_events %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <a href="{% url 'event_management:detail' event.pk %}">{{ event.title }}</a>
+                                        </h6>
+                                        <p class="mb-1 text-muted">{{ event.start_datetime|date:"M d, Y g:i A" }}</p>
+                                        <small class="text-muted">{{ event.description|truncatewords:15 }}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-primary">Event</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card mt-4">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5>No Events Yet</h5>
+                        <p class="text-muted">This speaker hasn't been assigned to any events.</p>
+                    </div>
+                </div>
             {% endif %}
         </div>
-    {% endif %}
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Actions</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'speaker_management:update' speaker.pk %}" class="btn btn-outline-primary btn-block mb-2 w-100">
+                            <i class="fas fa-edit"></i> Edit Speaker
+                        </a>
+                        <a href="{% url 'admin:shared_speaker_change' speaker.pk %}" class="btn btn-outline-secondary btn-block mb-2 w-100">
+                            <i class="fas fa-cog"></i> Manage in Admin
+                        </a>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i>
+                            To delete this speaker, use the Django admin panel above.
+                        </small>
+                    {% else %}
+                        <p class="text-muted">Please log in to manage speakers.</p>
+                        <a href="{% url 'admin:login' %}" class="btn btn-primary btn-block w-100">Log In</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'speaker_management:list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Speakers
+        </a>
+    </div>
 </div>
-{% endblock %}
+{% endblock %>

@@ -1,3 +1,4 @@
+# event_calendar/display/views.py
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views import View
@@ -14,9 +15,9 @@ class CalendarView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # Get upcoming events (no status filter since we removed status field)
         context['upcoming_events'] = Event.objects.filter(
-            start_datetime__gte=timezone.now(),
-            status='published'
+            start_datetime__gte=timezone.now()
         )[:5]
         return context
 
@@ -34,9 +35,9 @@ class EventAPIView(View):
                 end = datetime.fromisoformat(end_date.replace('Z', '+00:00')).date()
                 events = get_events_by_date_range(start, end)
             except ValueError:
-                events = Event.objects.filter(status='published')
+                events = Event.objects.all()
         else:
-            events = Event.objects.filter(status='published')
+            events = Event.objects.all()
 
         event_list = []
         for event in events:
@@ -46,21 +47,10 @@ class EventAPIView(View):
                 'start': event.start_datetime.isoformat(),
                 'end': event.end_datetime.isoformat(),
                 'url': f'/events/{event.id}/',
-                'backgroundColor': self.get_event_color(event.event_type),
-                'borderColor': self.get_event_color(event.event_type),
+                'backgroundColor': '#007bff',  # Default blue color
+                'borderColor': '#007bff',
                 'description': event.description[:100] + '...' if len(event.description) > 100 else event.description,
-                'location': event.location or 'TBD',
+                'speaker': event.speaker.name if event.speaker else 'TBD',
             })
 
         return JsonResponse(event_list, safe=False)
-
-    def get_event_color(self, event_type):
-        """Return color based on event type"""
-        colors = {
-            'conference': '#007bff',
-            'workshop': '#28a745',
-            'seminar': '#ffc107',
-            'webinar': '#17a2b8',
-            'meeting': '#6c757d',
-        }
-        return colors.get(event_type, '#6c757d')

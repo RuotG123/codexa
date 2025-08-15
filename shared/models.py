@@ -8,8 +8,7 @@ class Speaker(models.Model):
     name = models.CharField(max_length=200)
     email = models.EmailField(validators=[EmailValidator()])
     bio = models.TextField(blank=True)
-    expertise = models.CharField(max_length=300, blank=True)
-    # Removed phone field
+    company_name = models.CharField(max_length=200, blank=True, help_text="Speaker's company or organization")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -22,12 +21,12 @@ class Speaker(models.Model):
 
 class Member(models.Model):
     """Model for managing organization members"""
-    MEMBERSHIP_TYPES = [
+    MEMBERSHIP_ROLES = [
         ('student', 'Student'),
         ('admin', 'Admin/Staff'),
     ]
 
-    # Added year choices for students
+    # Year choices for students
     YEAR_CHOICES = [
         ('freshman', 'Freshman'),
         ('sophomore', 'Sophomore'),
@@ -40,14 +39,12 @@ class Member(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
     email = models.EmailField(validators=[EmailValidator()])
-    phone = models.CharField(max_length=20, blank=True)
-    membership_type = models.CharField(max_length=20, choices=MEMBERSHIP_TYPES, default='student')
+    membership_role = models.CharField(max_length=20, choices=MEMBERSHIP_ROLES, default='student')
 
-    # New fields for academic information
+    # Academic information
     major = models.CharField(max_length=100, blank=True, help_text="Student's major/field of study")
     year = models.CharField(max_length=20, choices=YEAR_CHOICES, blank=True, help_text="Academic year level")
 
-    join_date = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -60,31 +57,12 @@ class Member(models.Model):
 
 
 class Event(models.Model):
-    """Model for managing events"""
-    EVENT_TYPES = [
-        ('conference', 'Conference'),
-        ('workshop', 'Workshop'),
-        ('seminar', 'Seminar'),
-        ('webinar', 'Webinar'),
-        ('meeting', 'Meeting'),
-    ]
-
-    STATUS_CHOICES = [
-        ('draft', 'Draft'),
-        ('published', 'Published'),
-        ('cancelled', 'Cancelled'),
-        ('completed', 'Completed'),
-    ]
-
+    """Model for managing events - simplified to match ERD"""
     title = models.CharField(max_length=300)
     description = models.TextField()
-    event_type = models.CharField(max_length=20, choices=EVENT_TYPES, default='meeting')
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
-    location = models.CharField(max_length=500, blank=True)
-    max_attendees = models.PositiveIntegerField(null=True, blank=True)
-    speaker = models.ForeignKey(Speaker, on_delete=models.SET_NULL, null=True, blank=True)
+    speaker = models.ForeignKey(Speaker, on_delete=models.CASCADE)  # Now required
     attendees = models.ManyToManyField(Member, blank=True, related_name='events_attending')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
