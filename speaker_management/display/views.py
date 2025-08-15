@@ -3,65 +3,66 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from shared.models import Speaker
-from ..forms.create import SpeakerCreateForm
-from ..forms.update import SpeakerUpdateForm
+from shared.models import Member
+from ..forms.create import MemberCreateForm
+from ..forms.update import MemberUpdateForm
 
 
-class SpeakerListView(ListView):
+class MemberListView(ListView):
     """Public view - no login required"""
-    model = Speaker
-    template_name = 'speaker_management/list.html'
-    context_object_name = 'speakers'
+    model = Member
+    template_name = 'member_management/list.html'
+    context_object_name = 'members'
     paginate_by = 20
 
     def get_queryset(self):
-        return Speaker.objects.all().order_by('name')
+        return Member.objects.filter(is_active=True).order_by('name')
 
 
-class SpeakerDetailView(DetailView):
+class MemberDetailView(DetailView):
     """Public view - no login required"""
-    model = Speaker
-    template_name = 'speaker_management/detail.html'
-    context_object_name = 'speaker'
+    model = Member
+    template_name = 'member_management/detail.html'
+    context_object_name = 'member'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['recent_events'] = self.object.event_set.all()[:5]
+        # Since we removed attendees field, we don't show recent events
+        # If you want to show something else, you can add it here
         return context
 
 
-class SpeakerCreateView(LoginRequiredMixin, CreateView):
+class MemberCreateView(LoginRequiredMixin, CreateView):
     """Admin only - login required"""
-    model = Speaker
-    form_class = SpeakerCreateForm
-    template_name = 'speaker_management/create.html'
-    success_url = reverse_lazy('speaker_management:list')
+    model = Member
+    form_class = MemberCreateForm
+    template_name = 'member_management/create.html'
+    success_url = reverse_lazy('member_management:list')
 
     def form_valid(self, form):
-        messages.success(self.request, 'Speaker created successfully!')
+        messages.success(self.request, 'Member created successfully!')
         return super().form_valid(form)
 
 
-class SpeakerUpdateView(LoginRequiredMixin, UpdateView):
+class MemberUpdateView(LoginRequiredMixin, UpdateView):
     """Admin only - login required"""
-    model = Speaker
-    form_class = SpeakerUpdateForm
-    template_name = 'speaker_management/update.html'
-    success_url = reverse_lazy('speaker_management:list')
+    model = Member
+    form_class = MemberUpdateForm
+    template_name = 'member_management/update.html'
+    success_url = reverse_lazy('member_management:list')
 
     def form_valid(self, form):
-        messages.success(self.request, 'Speaker updated successfully!')
+        messages.success(self.request, 'Member updated successfully!')
         return super().form_valid(form)
 
 
-class SpeakerDeleteView(LoginRequiredMixin, DeleteView):
+class MemberDeleteView(LoginRequiredMixin, DeleteView):
     """Admin only - login required"""
-    model = Speaker
-    template_name = 'speaker_management/delete.html'
-    success_url = reverse_lazy('speaker_management:list')
-    context_object_name = 'speaker'
+    model = Member
+    template_name = 'member_management/delete.html'
+    success_url = reverse_lazy('member_management:list')
+    context_object_name = 'member'
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, 'Speaker deleted successfully!')
+        messages.success(self.request, 'Member deleted successfully!')
         return super().delete(request, *args, **kwargs)

@@ -9,19 +9,15 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h1 class="h3 mb-0">{{ member.name }}</h1>
-                    <span class="badge bg-{% if member.membership_type == 'admin' %}success{% elif member.membership_type == 'student' %}info{% else %}info{% endif %} fs-6">
-                        {{ member.get_membership_type_display }}
+                    <span class="badge bg-{% if member.membership_role == 'admin' %}success{% elif member.membership_role == 'student' %}info{% else %}info{% endif %} fs-6">
+                        {{ member.get_membership_role_display }}
                     </span>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <h6><i class="fas fa-envelope"></i> Email</h6>
                             <p><a href="mailto:{{ member.email }}">{{ member.email }}</a></p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6><i class="fas fa-phone"></i> Phone</h6>
-                            <p>{{ member.phone|default:"Not provided" }}</p>
                         </div>
                     </div>
 
@@ -47,10 +43,6 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <h6><i class="fas fa-calendar-plus"></i> Join Date</h6>
-                            <p>{{ member.join_date|date:"F d, Y" }}</p>
-                        </div>
-                        <div class="col-md-6">
                             <h6><i class="fas fa-check-circle"></i> Status</h6>
                             <p>
                                 {% if member.is_active %}
@@ -59,6 +51,10 @@
                                     <span class="badge bg-secondary">Inactive</span>
                                 {% endif %}
                             </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-calendar-plus"></i> Created</h6>
+                            <p>{{ member.created_at|date:"F d, Y" }}</p>
                         </div>
                     </div>
 
@@ -72,32 +68,6 @@
                     {% endif %}
                 </div>
             </div>
-
-            {% if recent_events %}
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h5><i class="fas fa-calendar"></i> Recent Events</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group list-group-flush">
-                            {% for event in recent_events %}
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6 class="mb-1">
-                                            <a href="{% url 'event_management:detail' event.pk %}">{{ event.title }}</a>
-                                        </h6>
-                                        <p class="mb-1 text-muted">{{ event.start_datetime|date:"M d, Y g:i A" }}</p>
-                                        <small class="text-muted">{{ event.location|default:"Location TBD" }}</small>
-                                    </div>
-                                    <span class="badge bg-{{ event.event_type|default:'secondary' }}">
-                                        {{ event.get_event_type_display }}
-                                    </span>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
         </div>
 
         <div class="col-lg-4">
@@ -110,7 +80,6 @@
                         <a href="{% url 'member_management:update' member.pk %}" class="btn btn-outline-primary btn-block mb-2 w-100">
                             <i class="fas fa-edit"></i> Edit Member
                         </a>
-                        <!-- Delete button removed - only available in admin -->
                         <a href="{% url 'admin:shared_member_change' member.pk %}" class="btn btn-outline-secondary btn-block mb-2 w-100">
                             <i class="fas fa-cog"></i> Manage in Admin
                         </a>

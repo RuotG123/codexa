@@ -62,8 +62,7 @@ class Event(models.Model):
     description = models.TextField()
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
-    speaker = models.ForeignKey(Speaker, on_delete=models.CASCADE)  # Now required
-    attendees = models.ManyToManyField(Member, blank=True, related_name='events_attending')
+    speaker = models.ForeignKey(Speaker, on_delete=models.CASCADE)  # Required
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -79,6 +78,4 @@ class Event(models.Model):
         from django.utils import timezone
         return self.start_datetime > timezone.now()
 
-    @property
-    def attendee_count(self):
-        return self.attendees.count()
+

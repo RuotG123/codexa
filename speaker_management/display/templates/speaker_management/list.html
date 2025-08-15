@@ -18,15 +18,15 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <h5 class="card-title">{{ speaker.name }}</h5>
+                            {% if speaker.company_name %}
+                                <p class="text-primary mb-2">
+                                    <i class="fas fa-building"></i> {{ speaker.company_name }}
+                                </p>
+                            {% endif %}
                             <p class="card-text">{{ speaker.bio|truncatewords:20|default:"No biography available." }}</p>
                             <p class="text-muted">
                                 <i class="fas fa-envelope"></i> {{ speaker.email }}
                             </p>
-                            {% if speaker.expertise %}
-                                <p class="text-muted">
-                                    <i class="fas fa-lightbulb"></i> {{ speaker.expertise|truncatewords:8 }}
-                                </p>
-                            {% endif %}
                             <div class="mt-auto">
                                 <small class="text-muted">
                                     <i class="fas fa-calendar-plus"></i> Added {{ speaker.created_at|date:"M d, Y" }}

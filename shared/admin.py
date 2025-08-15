@@ -5,11 +5,11 @@ from .models import Event, Member, Speaker
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ['title', 'start_datetime', 'speaker', 'attendee_count']
+    list_display = ['title', 'start_datetime', 'speaker']
     list_filter = ['start_datetime', 'speaker']
     search_fields = ['title', 'description', 'speaker__name']
     date_hierarchy = 'start_datetime'
-    readonly_fields = ['attendee_count', 'created_at', 'updated_at']
+    readonly_fields = ['created_at', 'updated_at']
 
     fieldsets = (
         ('Event Information', {
@@ -18,16 +18,11 @@ class EventAdmin(admin.ModelAdmin):
         ('Schedule', {
             'fields': ('start_datetime', 'end_datetime')
         }),
-        ('Registration', {
-            'fields': ('attendees', 'attendee_count'),
-            'description': 'Manage event attendees'
-        }),
         ('System Information', {
             'fields': ('created_by', 'created_at', 'updated_at'),
             'classes': ('collapse',)
         }),
     )
-    filter_horizontal = ('attendees',)
 
 
 @admin.register(Member)
