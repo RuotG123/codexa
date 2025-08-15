@@ -31,11 +31,6 @@
                                     <br><small>{{ event.speaker.company_name }}</small>
                                 {% endif %}
                             </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">
-                                    <i class="fas fa-users"></i> {{ event.attendee_count }} attending
-                                </small>
-                            </div>
                         </div>
                         <div class="card-footer">
                             <a href="{% url 'event_management:detail' event.pk %}" class="btn btn-outline-primary btn-sm">

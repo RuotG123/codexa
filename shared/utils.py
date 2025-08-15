@@ -33,14 +33,3 @@ def format_event_datetime(event):
     start = event.start_datetime.strftime('%Y-%m-%d %H:%M')
     end = event.end_datetime.strftime('%Y-%m-%d %H:%M')
     return f"{start} - {end}"
-
-
-def can_register_for_event(event, member):
-    """Check if a member can register for an event"""
-    if not event.is_upcoming:
-        return False, "Event has already passed"
-
-    if member in event.attendees.all():
-        return False, "Already registered for this event"
-
-    return True, "Can register"

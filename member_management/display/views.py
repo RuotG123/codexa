@@ -27,7 +27,7 @@ class MemberDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['recent_events'] = self.object.events_attending.all()[:5]
+        # Since we removed attendees field, we don't show recent events
         return context
 
 
